@@ -125,7 +125,7 @@ const Header: React.FC = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-lg border-b border-neutral-200 dark:border-neutral-700">
       <div className="container-main">
-        <div className="grid grid-cols-3 items-center h-16">
+        <div className="flex justify-between items-center h-16 md:grid md:grid-cols-3">
           {/* Back Button and Logo - Left */}
           <div className="flex items-center space-x-3">
             {!isHomePage && (
