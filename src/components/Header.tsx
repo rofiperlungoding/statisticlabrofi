@@ -216,17 +216,17 @@ const Header: React.FC = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-neutral-200 dark:border-neutral-700">
-            <nav className="flex flex-col items-start space-y-2">
+            <nav className="flex flex-col items-end space-y-2">
               {!isHomePage && (
                 <button
                   onClick={() => {
                     navigate('/');
                     setIsMenuOpen(false);
                   }}
-                  className="flex items-center justify-start space-x-2 nav-item text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
+                  className="flex items-center justify-end space-x-2 nav-item text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
                 >
-                  <ArrowLeft className="w-4 h-4" />
                   <span>Back to Home</span>
+                  <ArrowLeft className="w-4 h-4" />
                 </button>
               )}
               {navigation.map((item, index) => {
