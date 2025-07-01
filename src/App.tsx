@@ -24,6 +24,7 @@ import ConfusionMatrix from './pages/projects/ConfusionMatrix';
 import SamplingBias from './pages/projects/SamplingBias';
 import RealTimeDashboard from './pages/projects/RealTimeDashboard';
 import StatisticalLearningPath from './pages/projects/StatisticalLearningPath';
+import StatisticalCourseModule from './pages/projects/StatisticalCourseModule';
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
             <Route path="/sampling-bias" element={<SamplingBias />} />
             <Route path="/real-time-dashboard" element={<RealTimeDashboard />} />
             <Route path="/statistical-learning-path" element={<StatisticalLearningPath />} />
+            <Route path="/statistical-course-module" element={<StatisticalCourseModule />} />
           </Routes>
         </main>
       </div>

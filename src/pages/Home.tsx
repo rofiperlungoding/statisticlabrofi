@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BarChart3, TrendingUp, Calculator, Target, Activity, TestTube, Users, FileText, ScatterChart as Scatter, Layers, Grid, Shield, Clock, Timer, Database, GraduationCap } from 'lucide-react';
+import { BarChart3, TrendingUp, Calculator, Target, Activity, TestTube, Users, FileText, ScatterChart as Scatter, Layers, Grid, Shield, Clock, Timer, Database, GraduationCap, BookOpen } from 'lucide-react';
 
 const Home: React.FC = () => {
   const projects = [
@@ -11,6 +11,14 @@ const Home: React.FC = () => {
       icon: GraduationCap,
       color: 'bg-gradient-to-br from-green-500 to-emerald-600',
       features: ['Practice exercises', 'Progressive difficulty', 'Interactive solutions']
+    },
+    {
+      id: 'statistical-course-module',
+      title: 'Complete Statistics Course',
+      description: 'Comprehensive educational curriculum covering statistics from foundations to advanced research methods across 5 progressive levels.',
+      icon: BookOpen,
+      color: 'bg-gradient-to-br from-indigo-500 to-purple-600',
+      features: ['Full curriculum', '24 chapters', 'Beginner to expert']
     },
     {
       id: 'descriptive-stats',
@@ -144,7 +152,7 @@ const Home: React.FC = () => {
               Statistical Analysis Suite
             </h1>
             <p className="text-subtitle text-secondary max-w-3xl mx-auto mb-8">
-              16 Professional Statistical Applications
+              17 Professional Statistical Applications
             </p>
             <p className="text-body text-muted max-w-2xl mx-auto mb-12">
               Comprehensive collection of statistical tools for data analysis, hypothesis testing, regression analysis, 
@@ -155,8 +163,8 @@ const Home: React.FC = () => {
               <Link to="#applications" className="btn-primary">
                 Explore Applications
               </Link>
-              <Link to="/statistical-learning-path" className="btn-secondary">
-                Start Learning Path
+              <Link to="/statistical-course-module" className="btn-secondary">
+                Start Learning Course
               </Link>
             </div>
           </div>
@@ -257,7 +265,7 @@ const Home: React.FC = () => {
           <h2 className="text-title text-primary mb-6">About This Suite</h2>
           <div className="space-element text-body text-secondary">
             <p className="mb-4">
-              This comprehensive statistical analysis suite provides 16 professional-grade applications designed for 
+              This comprehensive statistical analysis suite provides 17 professional-grade applications designed for 
               researchers, students, data scientists, and analysts. Each tool implements industry-standard statistical 
               methods with rigorous mathematical accuracy and comprehensive validation.
             </p>
