@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { BarChart3, Menu, X, Sun, Moon, ArrowLeft } from 'lucide-react';
+import { Menu, X, Sun, Moon, ArrowLeft } from 'lucide-react';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -93,8 +93,12 @@ const Header: React.FC = () => {
               </button>
             )}
             <Link to="/" className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <BarChart3 className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 flex items-center justify-center">
+                <img 
+                  src="/R.png" 
+                  alt="Rofi's StatisticLab Logo" 
+                  className="w-8 h-8 object-contain filter dark:brightness-0 dark:invert transition-all duration-200"
+                />
               </div>
               <div className="hidden sm:block">
                 <h1 className="text-lg lg:text-xl font-medium text-primary">{getPageTitle()}</h1>
