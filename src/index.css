@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Typography Classes */
+@layer components {
+  .text-display {
+    @apply text-4xl lg:text-5xl ultrawide:text-6xl font-medium leading-tight tracking-tight;
+  }
+  
+  .text-title {
+    @apply text-2xl lg:text-3xl font-medium leading-tight tracking-tight;
+  }
+  
+  .text-subtitle {
+    @apply text-lg lg:text-xl font-medium;
+  }
+  
+  .text-body {
+    @apply text-sm lg:text-base;
+  }
+  
+  .text-caption {
+    @apply text-xs;
+  }
+
+  /* Button Styles */
+  .btn-primary {
+    @apply bg-neutral-900 dark:bg-blue-600 text-white px-4 py-2 text-sm font-medium rounded-lg hover:bg-neutral-800 dark:hover:bg-blue-700 transition-colors duration-150;
+  }
+  
+  .btn-secondary {
+    @apply bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 px-4 py-2 text-sm font-medium rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors duration-150;
+  }
+  
+  .btn-ghost {
+    @apply bg-transparent text-neutral-600 dark:text-neutral-400 px-4 py-2 text-sm font-medium rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-150;
+  }
+
+  /* Card Styles */
+  .card {
+    @apply bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-2xl transition-all duration-200;
+  }
+  
+  .card-hover {
+    @apply hover:border-neutral-300 dark:hover:border-neutral-600 hover:shadow-sm;
+  }
+  
+  .card-elevated {
+    @apply shadow-card;
+  }
+
+  /* Input Styles */
+  .input {
+    @apply w-full px-4 py-3 text-sm bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl focus:ring-2 focus:ring-neutral-900 dark:focus:ring-neutral-500 focus:border-transparent transition-all duration-200;
+  }
+
+  /* Navigation Styles */
+  .nav-item {
+    @apply px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200;
+  }
+  
+  .nav-item-active {
+    @apply bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white;
+  }
+
+  /* Spacing Classes */
+  .space-section {
+    @apply space-y-12 lg:space-y-16;
+  }
+  
+  .space-component {
+    @apply space-y-6 lg:space-y-8;
+  }
+  
+  .space-element {
+    @apply space-y-3 lg:space-y-4;
+  }
+  
+  .section-padding {
+    @apply py-8 lg:py-16;
+  }
+
+  /* Container Classes */
+  .container-main {
+    @apply max-w-7xl mx-auto px-4 tablet:px-6 desktop:px-8;
+  }
+  
+  .container-narrow {
+    @apply max-w-4xl mx-auto px-4 tablet:px-6 desktop:px-8;
+  }
+  
+  .container-minimal {
+    @apply max-w-2xl mx-auto px-4 tablet:px-6 desktop:px-8;
+  }
+
+  /* Grid Classes */
+  .grid-main {
+    @apply grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6;
+  }
+  
+  .grid-cards {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+  
+  .grid-stats {
+    @apply grid grid-cols-2 lg:grid-cols-4 gap-4;
+  }
+
+  /* Text Color Classes */
+  .text-primary {
+    @apply text-neutral-900 dark:text-white;
+  }
+  
+  .text-secondary {
+    @apply text-neutral-700 dark:text-neutral-300;
+  }
+  
+  .text-muted {
+    @apply text-neutral-500 dark:text-neutral-400;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-neutral-100 dark:bg-neutral-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-neutral-300 dark:bg-neutral-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-neutral-400 dark:bg-neutral-500;
+}
+
+/* Base Styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-white;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  font-weight: 500;
+}
