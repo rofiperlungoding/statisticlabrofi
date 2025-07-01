@@ -83,10 +83,17 @@ const StatisticalCourseModule: React.FC = () => {
             {
               title: "What is Statistics?",
               content: [
-                "Definition and importance of statistics",
-                "Role of statistics in daily life and decision-making",
-                "Types of statistics: descriptive vs. inferential",
-                "Statistical thinking and reasoning"
+                "Statistics is the science of collecting, analyzing, interpreting, and presenting data to uncover meaningful patterns and make informed decisions. At its core, statistics transforms raw numbers into actionable insights, serving as a bridge between data and understanding. This discipline encompasses both the mathematical methods used to process information and the practical application of these techniques to solve real-world problems.",
+                
+                "The importance of statistics extends far beyond academic settings, permeating virtually every aspect of modern society. In healthcare, statistics help researchers determine the effectiveness of new treatments through clinical trials, enabling doctors to make evidence-based decisions about patient care. For instance, when a pharmaceutical company tests a new medication, statistical analysis reveals whether observed improvements are due to the drug's effectiveness or merely random chance, potentially saving countless lives through rigorous validation.",
+                
+                "Statistics plays a crucial role in everyday decision-making, often in ways we might not immediately recognize. When you check weather forecasts, you're relying on statistical models that analyze atmospheric data to predict future conditions. Online recommendation systems use statistical algorithms to suggest products, movies, or music based on your past behavior and similarities with other users. Even something as simple as reading product reviews involves interpreting statistical patterns in customer feedback to make purchasing decisions.",
+                
+                "The field divides into two main branches: descriptive and inferential statistics, each serving distinct but complementary purposes. Descriptive statistics focuses on summarizing and describing the characteristics of a dataset, providing clear snapshots of what the data reveals. This includes calculating measures like averages, identifying the most common values, and determining how spread out the data points are. For example, a school might use descriptive statistics to report that the average test score was 85%, with most students scoring between 75% and 95%.",
+                
+                "Inferential statistics, in contrast, uses sample data to make educated guesses or draw conclusions about larger populations. This branch employs probability theory to quantify uncertainty and assess the reliability of conclusions. Consider a political poll surveying 1,000 voters to predict election outcomes for millions of citizens. Inferential statistics helps determine not just the predicted winner, but also the margin of error and confidence level of that prediction, acknowledging the inherent uncertainty in extrapolating from limited data.",
+                
+                "Statistical thinking and reasoning represent a fundamental shift in how we approach problems and evaluate information. This mindset emphasizes evidence-based decision-making, recognizing that random variation is natural and that patterns must be distinguished from noise. Statistical reasoning involves questioning assumptions, considering alternative explanations, and quantifying uncertainty rather than seeking absolute certainty. For instance, if a company's sales increase after launching an advertising campaign, statistical thinking prompts questions about other factors that might have contributed to the increase, such as seasonal trends, competitor actions, or economic conditions, rather than immediately attributing all success to the advertisement."
               ]
             },
             {
@@ -1153,11 +1160,10 @@ const StatisticalCourseModule: React.FC = () => {
                               </button>
                               
                               {isTopicExpanded && (
-                                <div className="mt-4 space-y-2">
+                                <div className="mt-4 space-y-4">
                                   {topic.content.map((item, itemIndex) => (
-                                    <div key={itemIndex} className="flex items-start space-x-3">
-                                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                                      <p className="text-sm text-secondary">{item}</p>
+                                    <div key={itemIndex} className="prose prose-sm max-w-none dark:prose-invert">
+                                      <p className="text-sm text-secondary leading-relaxed mb-4">{item}</p>
                                     </div>
                                   ))}
                                 </div>
