@@ -17,19 +17,16 @@ const Header: React.FC = () => {
 
   const handleNavClick = (href: string, sectionId?: string) => {
     if (sectionId) {
+      // Navigate directly to the hash URL
+      navigate(`/#${sectionId}`);
+      // If we're already on the home page, also scroll to the element
       if (location.pathname === '/') {
-        const element = document.getElementById(sectionId);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      } else {
-        navigate('/');
         setTimeout(() => {
           const element = document.getElementById(sectionId);
           if (element) {
             element.scrollIntoView({ behavior: 'smooth' });
           }
-        }, 100);
+        }, 50);
       }
     } else {
       navigate(href);
@@ -92,29 +89,9 @@ const Header: React.FC = () => {
     return 0;
   };
 
-  // Update slider position when location or hash changes
+  // Update slider position when location changes
   useEffect(() => {
-    if (navRef.current) {
-      const activeIndex = getActiveIndex();
-      const buttons = navRef.current.querySelectorAll('button');
-      const activeButton = buttons[activeIndex];
-      
-      if (activeButton) {
-        const navRect = navRef.current.getBoundingClientRect();
-        const buttonRect = activeButton.getBoundingClientRect();
-        
-        setSliderStyle({
-          left: buttonRect.left - navRect.left,
-          width: buttonRect.width
-        });
-      }
-    }
-  }, [location.pathname, location.hash]); // Added location.hash to dependencies
-
-  // Listen for hash changes to update slider position
-  useEffect(() => {
-    const handleHashChange = () => {
-      // Force a re-render to update the slider position
+    const updateSliderPosition = () => {
       if (navRef.current) {
         const activeIndex = getActiveIndex();
         const buttons = navRef.current.querySelectorAll('button');
@@ -132,9 +109,16 @@ const Header: React.FC = () => {
       }
     };
 
+    updateSliderPosition();
+    
+    // Also update when hash changes (for direct navigation or browser back/forward)
+    const handleHashChange = () => {
+      setTimeout(updateSliderPosition, 50);
+    };
+
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
+  }, [location.pathname, location.hash]);
 
   const isHomePage = location.pathname === '/';
 
