@@ -243,10 +243,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For questions, suggestions, or collaboration opportunities:
 
-- **Project Maintainer**: [Your Name]
-- **Email**: [your.email@domain.com]
-- **LinkedIn**: [Your LinkedIn Profile]
-- **Twitter**: [@yourusername]
+- **Project Maintainer**: Rofi Darmawan
+- **Email**: opikopi32@gmail.com
+- **LinkedIn**: rofiperlungoding
+- **Twitter**: x.com/opikopi6
 
 ---
 
