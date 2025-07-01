@@ -69,6 +69,7 @@ const Header: React.FC = () => {
       '/confusion-matrix': 'Confusion Matrix Builder',
       '/sampling-bias': 'Sampling Bias Simulator',
       '/real-time-dashboard': 'Real-Time Dashboard',
+      '/statistical-learning-path': 'Statistical Learning Path',
     };
     
     return titles[path] || 'Statistical Analysis Suite';
@@ -96,7 +97,7 @@ const Header: React.FC = () => {
                 <BarChart3 className="w-5 h-5 text-white" />
               </div>
               <div className="hidden sm:block">
-                <h1 className="text-title text-primary">{getPageTitle()}</h1>
+                <h1 className="text-lg lg:text-xl font-medium text-primary">{getPageTitle()}</h1>
               </div>
             </Link>
           </div>
