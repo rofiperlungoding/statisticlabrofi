@@ -637,62 +637,53 @@ const StatisticalLearningPath: React.FC = () => {
     const isAnswered = selectedAnswers.hasOwnProperty(currentExerciseIndex);
 
     return (
-      <div className="container-main section-padding space-section">
-        {/* Header with Back Button */}
-        <div className="flex items-center mb-8">
+      <div className="container-main section-padding">
+        {/* Simplified Header */}
+        <div className="flex items-center justify-between mb-6">
           <button
             onClick={backToHub}
-            className="flex items-center space-x-2 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors mr-4"
+            className="flex items-center space-x-2 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
           >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Back to Practice Hub</span>
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back</span>
           </button>
-          <div className="flex-1">
-            <h1 className="text-xl font-semibold text-primary">{selectedSet.title}</h1>
+          <div className="text-center">
+            <h1 className="text-lg font-medium text-primary">{selectedSet.title}</h1>
             <p className="text-sm text-muted">
-              Question {currentExerciseIndex + 1} of {selectedSet.exercises.length}
+              {currentExerciseIndex + 1} of {selectedSet.exercises.length}
             </p>
           </div>
+          <div className="w-16"></div>
         </div>
 
-        {/* Progress Bar */}
-        <div className="card p-6 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-medium text-primary">Progress</h3>
-            <span className="text-sm text-muted">
-              {currentExerciseIndex + 1} / {selectedSet.exercises.length}
-            </span>
-          </div>
-          <div className="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-3">
-            <div 
-              className="bg-blue-500 h-3 rounded-full transition-all duration-300"
-              style={{ width: `${((currentExerciseIndex + 1) / selectedSet.exercises.length) * 100}%` }}
-            ></div>
-          </div>
+        {/* Simplified Progress Bar */}
+        <div className="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2 mb-8">
+          <div 
+            className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+            style={{ width: `${((currentExerciseIndex + 1) / selectedSet.exercises.length) * 100}%` }}
+          ></div>
         </div>
 
         {/* Current Question */}
-        <div className="max-w-3xl mx-auto">
-          <div className="card p-8">
-            <div className="flex items-start justify-between mb-6">
-              <div>
-                <span className="text-xs px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 rounded-full">
-                  {currentExercise.concept}
-                </span>
-              </div>
+        <div className="max-w-2xl mx-auto">
+          <div className="card p-6">
+            <div className="mb-4">
+              <span className="text-xs px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 rounded">
+                {currentExercise.concept}
+              </span>
             </div>
             
-            <h2 className="text-xl font-medium text-primary mb-8">
+            <h2 className="text-xl font-medium text-primary mb-6">
               {currentExercise.question}
             </h2>
             
-            <div className="space-y-4 mb-8">
+            <div className="space-y-3 mb-6">
               {currentExercise.options.map((option, optionIndex) => (
                 <button
                   key={optionIndex}
                   onClick={() => selectAnswer(optionIndex)}
                   disabled={showExplanation}
-                  className={`w-full p-4 text-left rounded-lg border transition-all ${
+                  className={`w-full p-3 text-left rounded-lg border transition-all ${
                     showExplanation
                       ? optionIndex === currentExercise.correctAnswer
                         ? 'border-green-500 bg-green-50 dark:bg-green-900/30'
@@ -705,7 +696,7 @@ const StatisticalLearningPath: React.FC = () => {
                   } ${showExplanation ? 'cursor-not-allowed' : 'cursor-pointer'}`}
                 >
                   <div className="flex items-center space-x-3">
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
                       showExplanation
                         ? optionIndex === currentExercise.correctAnswer
                           ? 'border-green-500 bg-green-500'
@@ -717,13 +708,13 @@ const StatisticalLearningPath: React.FC = () => {
                         : 'border-neutral-300 dark:border-neutral-600'
                     }`}>
                       {showExplanation && optionIndex === currentExercise.correctAnswer && (
-                        <CheckCircle className="w-4 h-4 text-white" />
+                        <CheckCircle className="w-3 h-3 text-white" />
                       )}
                       {showExplanation && selectedAnswers[currentExerciseIndex] === optionIndex && optionIndex !== currentExercise.correctAnswer && (
-                        <XCircle className="w-4 h-4 text-white" />
+                        <XCircle className="w-3 h-3 text-white" />
                       )}
                       {!showExplanation && selectedAnswers[currentExerciseIndex] === optionIndex && (
-                        <div className="w-3 h-3 bg-white rounded-full"></div>
+                        <div className="w-2 h-2 bg-white rounded-full"></div>
                       )}
                     </div>
                     <span className="font-medium">{String.fromCharCode(65 + optionIndex)}.</span>
@@ -735,26 +726,26 @@ const StatisticalLearningPath: React.FC = () => {
 
             {/* Show explanation */}
             {showExplanation && (
-              <div className={`p-6 rounded-lg border-l-4 ${
+              <div className={`p-4 rounded-lg border-l-4 ${
                 selectedAnswers[currentExerciseIndex] === currentExercise.correctAnswer
                   ? 'bg-green-50 dark:bg-green-900/30 border-green-500'
                   : 'bg-red-50 dark:bg-red-900/30 border-red-500'
               }`}>
                 <div className="flex items-start space-x-3">
                   {selectedAnswers[currentExerciseIndex] === currentExercise.correctAnswer ? (
-                    <CheckCircle className="w-6 h-6 text-green-600 mt-1" />
+                    <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
                   ) : (
-                    <XCircle className="w-6 h-6 text-red-600 mt-1" />
+                    <XCircle className="w-5 h-5 text-red-600 mt-0.5" />
                   )}
                   <div>
-                    <p className={`font-semibold text-lg mb-2 ${
+                    <p className={`font-medium mb-2 ${
                       selectedAnswers[currentExerciseIndex] === currentExercise.correctAnswer
                         ? 'text-green-800 dark:text-green-200'
                         : 'text-red-800 dark:text-red-200'
                     }`}>
                       {selectedAnswers[currentExerciseIndex] === currentExercise.correctAnswer ? 'Correct!' : 'Incorrect'}
                     </p>
-                    <p className={`${
+                    <p className={`text-sm ${
                       selectedAnswers[currentExerciseIndex] === currentExercise.correctAnswer
                         ? 'text-green-700 dark:text-green-300'
                         : 'text-red-700 dark:text-red-300'
@@ -762,7 +753,7 @@ const StatisticalLearningPath: React.FC = () => {
                       {currentExercise.explanation}
                     </p>
                     {selectedAnswers[currentExerciseIndex] !== currentExercise.correctAnswer && (
-                      <p className="text-green-700 dark:text-green-300 mt-3 font-medium">
+                      <p className="text-green-700 dark:text-green-300 mt-2 text-sm font-medium">
                         Correct answer: {String.fromCharCode(65 + currentExercise.correctAnswer)}. {currentExercise.options[currentExercise.correctAnswer]}
                       </p>
                     )}
@@ -770,8 +761,8 @@ const StatisticalLearningPath: React.FC = () => {
                 </div>
 
                 {currentExerciseIndex < selectedSet.exercises.length - 1 && (
-                  <div className="mt-4 flex items-center text-sm text-neutral-600 dark:text-neutral-400">
-                    <span>Moving to next question...</span>
+                  <div className="mt-3 flex items-center text-sm text-neutral-600 dark:text-neutral-400">
+                    <span>Next question in 3 seconds...</span>
                     <ChevronRight className="w-4 h-4 ml-1" />
                   </div>
                 )}
@@ -784,36 +775,33 @@ const StatisticalLearningPath: React.FC = () => {
   }
 
   return (
-    <div className="container-main section-padding space-section">
+    <div className="container-main section-padding">
       {/* Header */}
-      <div className="text-center mb-12">
+      <div className="text-center mb-8">
         <h1 className="text-title text-primary mb-4">Statistical Learning Path</h1>
         <p className="text-body text-secondary max-w-2xl mx-auto">
-          Master statistics through interactive practice exercises. Progress from basic concepts to advanced statistical inference with step-by-step guidance.
+          Master statistics through interactive practice exercises. Progress from basic concepts to advanced statistical inference.
         </p>
       </div>
 
       {/* Progress Overview */}
-      <div className="card p-6 mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-subtitle text-primary">Learning Progress</h3>
+      <div className="card p-4 mb-6">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-lg font-medium text-primary">Progress</h3>
           <span className="text-sm text-muted">
-            {completedSets.size} / {exerciseSets.length} sets completed
+            {completedSets.size} / {exerciseSets.length} completed
           </span>
         </div>
-        <div className="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-3">
+        <div className="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2">
           <div 
-            className="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full transition-all duration-500"
+            className="bg-gradient-to-r from-green-500 to-blue-500 h-2 rounded-full transition-all duration-500"
             style={{ width: `${(completedSets.size / exerciseSets.length) * 100}%` }}
           ></div>
         </div>
-        <p className="text-sm text-muted mt-2">
-          Complete practice sets by scoring 80% or higher to unlock your progress.
-        </p>
       </div>
 
       {/* Exercise Sets Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {exerciseSets.map((set) => {
           const IconComponent = set.icon;
           const isCompleted = completedSets.has(set.id);
@@ -821,31 +809,31 @@ const StatisticalLearningPath: React.FC = () => {
           return (
             <div
               key={set.id}
-              className={`card card-hover group relative overflow-hidden ${
+              className={`card card-hover group relative ${
                 isCompleted ? 'ring-2 ring-green-500' : ''
               }`}
             >
               {isCompleted && (
-                <div className="absolute top-4 right-4 z-10">
-                  <CheckCircle className="w-6 h-6 text-green-600" />
+                <div className="absolute top-3 right-3 z-10">
+                  <CheckCircle className="w-5 h-5 text-green-600" />
                 </div>
               )}
               
-              <div className="p-6 space-element">
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`w-12 h-12 ${set.color} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
-                    <IconComponent className="w-6 h-6 text-white" />
+              <div className="p-4">
+                <div className="flex items-start justify-between mb-3">
+                  <div className={`w-10 h-10 ${set.color} rounded-lg flex items-center justify-center`}>
+                    <IconComponent className="w-5 h-5 text-white" />
                   </div>
-                  <span className={`text-xs px-2 py-1 rounded-full ${getDifficultyColor(set.difficulty)}`}>
+                  <span className={`text-xs px-2 py-1 rounded ${getDifficultyColor(set.difficulty)}`}>
                     {set.difficulty}
                   </span>
                 </div>
                 
-                <h3 className="text-subtitle text-primary mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                <h3 className="text-lg font-medium text-primary mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                   {set.title}
                 </h3>
                 
-                <p className="text-body text-secondary mb-4">
+                <p className="text-sm text-secondary mb-4 line-clamp-2">
                   {set.description}
                 </p>
                 
@@ -855,41 +843,15 @@ const StatisticalLearningPath: React.FC = () => {
                   </span>
                   <button
                     onClick={() => startExerciseSet(set)}
-                    className="btn-primary flex items-center space-x-2"
+                    className="btn-primary text-sm"
                   >
-                    <Play className="w-4 h-4" />
-                    <span>{isCompleted ? 'Practice Again' : 'Start'}</span>
+                    {isCompleted ? 'Retry' : 'Start'}
                   </button>
                 </div>
               </div>
             </div>
           );
         })}
-      </div>
-
-      {/* Learning Tips */}
-      <div className="card p-6 mt-8">
-        <h3 className="text-subtitle text-primary mb-4">Learning Tips</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-body text-secondary">
-          <div>
-            <h4 className="font-medium text-primary mb-2">Practice Regularly</h4>
-            <p className="text-sm">
-              Consistent practice helps reinforce statistical concepts. Try to complete one exercise set per week.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-medium text-primary mb-2">Read Explanations</h4>
-            <p className="text-sm">
-              Each question includes detailed explanations. Review these carefully to understand the underlying concepts.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-medium text-primary mb-2">Progress Gradually</h4>
-            <p className="text-sm">
-              Start with beginner concepts and work your way up. Master the fundamentals before moving to advanced topics.
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   );
