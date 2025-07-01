@@ -78,16 +78,21 @@ const Header: React.FC = () => {
 
   const getActiveIndex = () => {
     const path = location.pathname;
+    const hash = location.hash;
     
+    // Check for specific hash sections on home page
+    if (path === '/' && hash === '#applications') return 2;
+    if (path === '/' && hash === '#about') return 3;
+    
+    // Check for direct paths
     if (path === '/') return 0;
     if (path === '/statistical-learning-path') return 1;
-    if (path.includes('#applications') || path === '/#applications') return 2;
-    if (path.includes('#about') || path === '/#about') return 3;
     
-    return 0; // Default to home for other pages
+    // Default to home for other pages
+    return 0;
   };
 
-  // Update slider position when location changes
+  // Update slider position when location or hash changes
   useEffect(() => {
     if (navRef.current) {
       const activeIndex = getActiveIndex();
@@ -104,7 +109,32 @@ const Header: React.FC = () => {
         });
       }
     }
-  }, [location.pathname]);
+  }, [location.pathname, location.hash]); // Added location.hash to dependencies
+
+  // Listen for hash changes to update slider position
+  useEffect(() => {
+    const handleHashChange = () => {
+      // Force a re-render to update the slider position
+      if (navRef.current) {
+        const activeIndex = getActiveIndex();
+        const buttons = navRef.current.querySelectorAll('button');
+        const activeButton = buttons[activeIndex];
+        
+        if (activeButton) {
+          const navRect = navRef.current.getBoundingClientRect();
+          const buttonRect = activeButton.getBoundingClientRect();
+          
+          setSliderStyle({
+            left: buttonRect.left - navRect.left,
+            width: buttonRect.width
+          });
+        }
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   const isHomePage = location.pathname === '/';
 
@@ -215,8 +245,8 @@ const Header: React.FC = () => {
                   <span>Back to Home</span>
                 </button>
               )}
-              {navigation.map((item) => {
-                const isActive = (location.pathname === '/' && item.sectionId) || location.pathname === item.href;
+              {navigation.map((item, index) => {
+                const isActive = getActiveIndex() === index;
                 return (
                   <button
                     key={item.name}
