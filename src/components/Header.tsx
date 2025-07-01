@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Sun, Moon, ArrowLeft } from 'lucide-react';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
+  const [sliderStyle, setSliderStyle] = useState({ left: 0, width: 0 });
+  const navRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -16,13 +18,11 @@ const Header: React.FC = () => {
   const handleNavClick = (href: string, sectionId?: string) => {
     if (sectionId) {
       if (location.pathname === '/') {
-        // Already on home page, just scroll
         const element = document.getElementById(sectionId);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' });
         }
       } else {
-        // Navigate to home first, then scroll
         navigate('/');
         setTimeout(() => {
           const element = document.getElementById(sectionId);
@@ -76,6 +76,36 @@ const Header: React.FC = () => {
     return titles[path] || 'Statistical Analysis Suite';
   };
 
+  const getActiveIndex = () => {
+    const path = location.pathname;
+    
+    if (path === '/') return 0;
+    if (path === '/statistical-learning-path') return 1;
+    if (path.includes('#applications') || path === '/#applications') return 2;
+    if (path.includes('#about') || path === '/#about') return 3;
+    
+    return 0; // Default to home for other pages
+  };
+
+  // Update slider position when location changes
+  useEffect(() => {
+    if (navRef.current) {
+      const activeIndex = getActiveIndex();
+      const buttons = navRef.current.querySelectorAll('button');
+      const activeButton = buttons[activeIndex];
+      
+      if (activeButton) {
+        const navRect = navRef.current.getBoundingClientRect();
+        const buttonRect = activeButton.getBoundingClientRect();
+        
+        setSliderStyle({
+          left: buttonRect.left - navRect.left,
+          width: buttonRect.width
+        });
+      }
+    }
+  }, [location.pathname]);
+
   const isHomePage = location.pathname === '/';
 
   return (
@@ -107,22 +137,38 @@ const Header: React.FC = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation - Center */}
+          {/* Desktop Navigation Slider - Center */}
           <nav className="hidden md:flex items-center justify-center">
-            <div className="flex items-center space-x-1">
-              {navigation.map((item) => (
-                <button
-                  key={item.name}
-                  onClick={() => handleNavClick(item.href, item.sectionId)}
-                  className={`nav-item ${
-                    (location.pathname === '/' && item.sectionId) || location.pathname === item.href
-                      ? 'nav-item-active'
-                      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-                  }`}
-                >
-                  {item.name}
-                </button>
-              ))}
+            <div 
+              ref={navRef}
+              className="relative flex items-center bg-neutral-100 dark:bg-neutral-800 rounded-full p-1 shadow-inner"
+            >
+              {/* Sliding background */}
+              <div
+                className="absolute top-1 bottom-1 bg-white dark:bg-neutral-700 rounded-full shadow-sm transition-all duration-300 ease-out"
+                style={{
+                  left: `${sliderStyle.left}px`,
+                  width: `${sliderStyle.width}px`,
+                }}
+              />
+              
+              {/* Navigation buttons */}
+              {navigation.map((item, index) => {
+                const isActive = getActiveIndex() === index;
+                return (
+                  <button
+                    key={item.name}
+                    onClick={() => handleNavClick(item.href, item.sectionId)}
+                    className={`relative z-10 px-4 py-2 text-sm font-medium rounded-full transition-colors duration-300 ${
+                      isActive
+                        ? 'text-neutral-900 dark:text-white'
+                        : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                    }`}
+                  >
+                    {item.name}
+                  </button>
+                );
+              })}
             </div>
           </nav>
 
@@ -169,19 +215,22 @@ const Header: React.FC = () => {
                   <span>Back to Home</span>
                 </button>
               )}
-              {navigation.map((item) => (
-                <button
-                  key={item.name}
-                  onClick={() => handleNavClick(item.href, item.sectionId)}
-                  className={`block nav-item w-full text-left ${
-                    (location.pathname === '/' && item.sectionId) || location.pathname === item.href
-                      ? 'nav-item-active'
-                      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-                  }`}
-                >
-                  {item.name}
-                </button>
-              ))}
+              {navigation.map((item) => {
+                const isActive = (location.pathname === '/' && item.sectionId) || location.pathname === item.href;
+                return (
+                  <button
+                    key={item.name}
+                    onClick={() => handleNavClick(item.href, item.sectionId)}
+                    className={`block nav-item w-full text-left ${
+                      isActive
+                        ? 'nav-item-active'
+                        : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                    }`}
+                  >
+                    {item.name}
+                  </button>
+                );
+              })}
             </nav>
           </div>
         )}
