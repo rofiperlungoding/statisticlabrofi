@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ArrowLeft, GraduationCap, Target, Trophy, BarChart3, Calculator, TrendingUp, CheckCircle, XCircle, RotateCcw, Play } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, GraduationCap, Target, Trophy, BarChart3, Calculator, TrendingUp, CheckCircle, XCircle, RotateCcw, Play, ChevronRight } from 'lucide-react';
 
 interface Exercise {
   id: string;
@@ -21,11 +21,11 @@ interface ExerciseSet {
 }
 
 const StatisticalLearningPath: React.FC = () => {
-  const [currentView, setCurrentView] = useState<'hub' | 'exercise'>('hub');
+  const [currentView, setCurrentView] = useState<'hub' | 'exercise' | 'results'>('hub');
   const [selectedSet, setSelectedSet] = useState<ExerciseSet | null>(null);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: number }>({});
-  const [showResults, setShowResults] = useState(false);
+  const [showExplanation, setShowExplanation] = useState(false);
   const [completedSets, setCompletedSets] = useState<Set<string>>(new Set());
 
   const exerciseSets: ExerciseSet[] = [
@@ -486,7 +486,7 @@ const StatisticalLearningPath: React.FC = () => {
     setCurrentView('exercise');
     setCurrentExerciseIndex(0);
     setSelectedAnswers({});
-    setShowResults(false);
+    setShowExplanation(false);
   };
 
   const backToHub = () => {
@@ -494,33 +494,44 @@ const StatisticalLearningPath: React.FC = () => {
     setSelectedSet(null);
     setCurrentExerciseIndex(0);
     setSelectedAnswers({});
-    setShowResults(false);
+    setShowExplanation(false);
   };
 
-  const selectAnswer = (questionIndex: number, answerIndex: number) => {
+  const selectAnswer = (answerIndex: number) => {
+    if (!selectedSet || showExplanation) return;
+
+    const currentAnswer = answerIndex;
     setSelectedAnswers(prev => ({
       ...prev,
-      [questionIndex]: answerIndex
+      [currentExerciseIndex]: currentAnswer
     }));
-  };
+    setShowExplanation(true);
 
-  const submitAnswers = () => {
-    setShowResults(true);
-    if (selectedSet) {
-      const correctCount = selectedSet.exercises.filter((exercise, index) => 
-        selectedAnswers[index] === exercise.correctAnswer
-      ).length;
-      
-      if (correctCount >= selectedSet.exercises.length * 0.8) {
-        setCompletedSets(prev => new Set([...prev, selectedSet.id]));
+    // Auto-advance to next question after showing explanation for 3 seconds
+    setTimeout(() => {
+      if (currentExerciseIndex < selectedSet.exercises.length - 1) {
+        setCurrentExerciseIndex(prev => prev + 1);
+        setShowExplanation(false);
+      } else {
+        // Finished all questions, show results
+        setCurrentView('results');
+        const correctCount = selectedSet.exercises.filter((exercise, index) => 
+          selectedAnswers[index] === exercise.correctAnswer || 
+          (index === currentExerciseIndex && currentAnswer === exercise.correctAnswer)
+        ).length;
+        
+        if (correctCount >= selectedSet.exercises.length * 0.8) {
+          setCompletedSets(prev => new Set([...prev, selectedSet.id]));
+        }
       }
-    }
+    }, 3000);
   };
 
   const resetExercise = () => {
     setSelectedAnswers({});
-    setShowResults(false);
+    setShowExplanation(false);
     setCurrentExerciseIndex(0);
+    setCurrentView('exercise');
   };
 
   const getScoreColor = (score: number, total: number) => {
@@ -539,11 +550,91 @@ const StatisticalLearningPath: React.FC = () => {
     }
   };
 
+  // Results view
+  if (currentView === 'results' && selectedSet) {
+    const score = Object.keys(selectedAnswers).length > 0 ? 
+      selectedSet.exercises.filter((exercise, index) => 
+        selectedAnswers[index] === exercise.correctAnswer
+      ).length : 0;
+
+    return (
+      <div className="container-main section-padding space-section">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="card p-8">
+            <div className="mb-6">
+              {score >= selectedSet.exercises.length * 0.8 ? (
+                <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+              ) : (
+                <Target className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
+              )}
+              
+              <h1 className="text-title text-primary mb-4">Quiz Complete!</h1>
+              <h2 className="text-subtitle text-secondary mb-6">{selectedSet.title}</h2>
+            </div>
+
+            <div className={`text-4xl font-bold mb-4 ${getScoreColor(score, selectedSet.exercises.length)}`}>
+              {score}/{selectedSet.exercises.length}
+            </div>
+            <div className={`text-lg mb-6 ${getScoreColor(score, selectedSet.exercises.length)}`}>
+              {Math.round((score / selectedSet.exercises.length) * 100)}% Correct
+            </div>
+
+            <div className="mb-8">
+              {score >= selectedSet.exercises.length * 0.8 ? (
+                <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                  <p className="text-green-800 dark:text-green-200 font-medium">
+                    🎉 Excellent work! You've mastered this topic.
+                  </p>
+                  <p className="text-green-700 dark:text-green-300 text-sm mt-1">
+                    Keep up the great progress in your statistical learning journey!
+                  </p>
+                </div>
+              ) : score >= selectedSet.exercises.length * 0.6 ? (
+                <div className="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+                  <p className="text-yellow-800 dark:text-yellow-200 font-medium">
+                    Good effort! You're making progress.
+                  </p>
+                  <p className="text-yellow-700 dark:text-yellow-300 text-sm mt-1">
+                    Review the explanations and try again to improve your understanding.
+                  </p>
+                </div>
+              ) : (
+                <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                  <p className="text-red-800 dark:text-red-200 font-medium">
+                    Keep practicing! Statistics takes time to master.
+                  </p>
+                  <p className="text-red-700 dark:text-red-300 text-sm mt-1">
+                    Review the concepts and explanations, then try the quiz again.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-center space-x-4">
+              <button
+                onClick={resetExercise}
+                className="btn-secondary flex items-center space-x-2"
+              >
+                <RotateCcw className="w-4 h-4" />
+                <span>Try Again</span>
+              </button>
+              <button
+                onClick={backToHub}
+                className="btn-primary"
+              >
+                Back to Learning Path
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Exercise view - single question display
   if (currentView === 'exercise' && selectedSet) {
     const currentExercise = selectedSet.exercises[currentExerciseIndex];
-    const score = selectedSet.exercises.filter((exercise, index) => 
-      selectedAnswers[index] === exercise.correctAnswer
-    ).length;
+    const isAnswered = selectedAnswers.hasOwnProperty(currentExerciseIndex);
 
     return (
       <div className="container-main section-padding space-section">
@@ -558,7 +649,9 @@ const StatisticalLearningPath: React.FC = () => {
           </button>
           <div className="flex-1">
             <h1 className="text-xl font-semibold text-primary">{selectedSet.title}</h1>
-            <p className="text-sm text-muted">{selectedSet.exercises.length} Questions</p>
+            <p className="text-sm text-muted">
+              Question {currentExerciseIndex + 1} of {selectedSet.exercises.length}
+            </p>
           </div>
         </div>
 
@@ -567,130 +660,124 @@ const StatisticalLearningPath: React.FC = () => {
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-medium text-primary">Progress</h3>
             <span className="text-sm text-muted">
-              {Object.keys(selectedAnswers).length} / {selectedSet.exercises.length} answered
+              {currentExerciseIndex + 1} / {selectedSet.exercises.length}
             </span>
           </div>
-          <div className="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2">
+          <div className="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-3">
             <div 
-              className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${(Object.keys(selectedAnswers).length / selectedSet.exercises.length) * 100}%` }}
+              className="bg-blue-500 h-3 rounded-full transition-all duration-300"
+              style={{ width: `${((currentExerciseIndex + 1) / selectedSet.exercises.length) * 100}%` }}
             ></div>
           </div>
         </div>
 
-        {/* Exercise Questions */}
-        <div className="space-y-6">
-          {selectedSet.exercises.map((exercise, index) => (
-            <div key={exercise.id} className="card p-6">
-              <div className="flex items-start justify-between mb-4">
-                <h3 className="text-lg font-medium text-primary">
-                  Question {index + 1}
-                </h3>
-                <span className="text-xs px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 rounded">
-                  {exercise.concept}
+        {/* Current Question */}
+        <div className="max-w-3xl mx-auto">
+          <div className="card p-8">
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <span className="text-xs px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 rounded-full">
+                  {currentExercise.concept}
                 </span>
               </div>
-              
-              <p className="text-body text-secondary mb-6">{exercise.question}</p>
-              
-              <div className="space-y-3 mb-6">
-                {exercise.options.map((option, optionIndex) => (
-                  <button
-                    key={optionIndex}
-                    onClick={() => selectAnswer(index, optionIndex)}
-                    className={`w-full p-4 text-left rounded-lg border transition-all ${
-                      selectedAnswers[index] === optionIndex
-                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30'
-                        : 'border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600'
-                    }`}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-4 h-4 rounded-full border-2 ${
-                        selectedAnswers[index] === optionIndex
-                          ? 'border-blue-500 bg-blue-500'
+            </div>
+            
+            <h2 className="text-xl font-medium text-primary mb-8">
+              {currentExercise.question}
+            </h2>
+            
+            <div className="space-y-4 mb-8">
+              {currentExercise.options.map((option, optionIndex) => (
+                <button
+                  key={optionIndex}
+                  onClick={() => selectAnswer(optionIndex)}
+                  disabled={showExplanation}
+                  className={`w-full p-4 text-left rounded-lg border transition-all ${
+                    showExplanation
+                      ? optionIndex === currentExercise.correctAnswer
+                        ? 'border-green-500 bg-green-50 dark:bg-green-900/30'
+                        : selectedAnswers[currentExerciseIndex] === optionIndex
+                        ? 'border-red-500 bg-red-50 dark:bg-red-900/30'
+                        : 'border-neutral-200 dark:border-neutral-700'
+                      : selectedAnswers[currentExerciseIndex] === optionIndex
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30'
+                      : 'border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600'
+                  } ${showExplanation ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                      showExplanation
+                        ? optionIndex === currentExercise.correctAnswer
+                          ? 'border-green-500 bg-green-500'
+                          : selectedAnswers[currentExerciseIndex] === optionIndex
+                          ? 'border-red-500 bg-red-500'
                           : 'border-neutral-300 dark:border-neutral-600'
-                      }`}>
-                        {selectedAnswers[index] === optionIndex && (
-                          <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
-                        )}
-                      </div>
-                      <span className="text-sm">{option}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-
-              {/* Show explanation after answering */}
-              {showResults && (
-                <div className={`p-4 rounded-lg border-l-4 ${
-                  selectedAnswers[index] === exercise.correctAnswer
-                    ? 'bg-green-50 dark:bg-green-900/30 border-green-500'
-                    : 'bg-red-50 dark:bg-red-900/30 border-red-500'
-                }`}>
-                  <div className="flex items-start space-x-2">
-                    {selectedAnswers[index] === exercise.correctAnswer ? (
-                      <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
-                    ) : (
-                      <XCircle className="w-5 h-5 text-red-600 mt-0.5" />
-                    )}
-                    <div>
-                      <p className={`font-medium ${
-                        selectedAnswers[index] === exercise.correctAnswer
-                          ? 'text-green-800 dark:text-green-200'
-                          : 'text-red-800 dark:text-red-200'
-                      }`}>
-                        {selectedAnswers[index] === exercise.correctAnswer ? 'Correct!' : 'Incorrect'}
-                      </p>
-                      <p className={`text-sm ${
-                        selectedAnswers[index] === exercise.correctAnswer
-                          ? 'text-green-700 dark:text-green-300'
-                          : 'text-red-700 dark:text-red-300'
-                      }`}>
-                        {exercise.explanation}
-                      </p>
-                      {selectedAnswers[index] !== exercise.correctAnswer && (
-                        <p className="text-sm text-green-700 dark:text-green-300 mt-2">
-                          Correct answer: {exercise.options[exercise.correctAnswer]}
-                        </p>
+                        : selectedAnswers[currentExerciseIndex] === optionIndex
+                        ? 'border-blue-500 bg-blue-500'
+                        : 'border-neutral-300 dark:border-neutral-600'
+                    }`}>
+                      {showExplanation && optionIndex === currentExercise.correctAnswer && (
+                        <CheckCircle className="w-4 h-4 text-white" />
+                      )}
+                      {showExplanation && selectedAnswers[currentExerciseIndex] === optionIndex && optionIndex !== currentExercise.correctAnswer && (
+                        <XCircle className="w-4 h-4 text-white" />
+                      )}
+                      {!showExplanation && selectedAnswers[currentExerciseIndex] === optionIndex && (
+                        <div className="w-3 h-3 bg-white rounded-full"></div>
                       )}
                     </div>
+                    <span className="font-medium">{String.fromCharCode(65 + optionIndex)}.</span>
+                    <span>{option}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {/* Show explanation */}
+            {showExplanation && (
+              <div className={`p-6 rounded-lg border-l-4 ${
+                selectedAnswers[currentExerciseIndex] === currentExercise.correctAnswer
+                  ? 'bg-green-50 dark:bg-green-900/30 border-green-500'
+                  : 'bg-red-50 dark:bg-red-900/30 border-red-500'
+              }`}>
+                <div className="flex items-start space-x-3">
+                  {selectedAnswers[currentExerciseIndex] === currentExercise.correctAnswer ? (
+                    <CheckCircle className="w-6 h-6 text-green-600 mt-1" />
+                  ) : (
+                    <XCircle className="w-6 h-6 text-red-600 mt-1" />
+                  )}
+                  <div>
+                    <p className={`font-semibold text-lg mb-2 ${
+                      selectedAnswers[currentExerciseIndex] === currentExercise.correctAnswer
+                        ? 'text-green-800 dark:text-green-200'
+                        : 'text-red-800 dark:text-red-200'
+                    }`}>
+                      {selectedAnswers[currentExerciseIndex] === currentExercise.correctAnswer ? 'Correct!' : 'Incorrect'}
+                    </p>
+                    <p className={`${
+                      selectedAnswers[currentExerciseIndex] === currentExercise.correctAnswer
+                        ? 'text-green-700 dark:text-green-300'
+                        : 'text-red-700 dark:text-red-300'
+                    }`}>
+                      {currentExercise.explanation}
+                    </p>
+                    {selectedAnswers[currentExerciseIndex] !== currentExercise.correctAnswer && (
+                      <p className="text-green-700 dark:text-green-300 mt-3 font-medium">
+                        Correct answer: {String.fromCharCode(65 + currentExercise.correctAnswer)}. {currentExercise.options[currentExercise.correctAnswer]}
+                      </p>
+                    )}
                   </div>
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
 
-        {/* Submit/Reset Buttons */}
-        <div className="flex items-center justify-center space-x-4 mt-8">
-          {!showResults ? (
-            <button
-              onClick={submitAnswers}
-              disabled={Object.keys(selectedAnswers).length !== selectedSet.exercises.length}
-              className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Submit Answers
-            </button>
-          ) : (
-            <div className="flex items-center space-x-4">
-              <div className={`text-lg font-semibold ${getScoreColor(score, selectedSet.exercises.length)}`}>
-                Score: {score}/{selectedSet.exercises.length} ({Math.round((score / selectedSet.exercises.length) * 100)}%)
+                {currentExerciseIndex < selectedSet.exercises.length - 1 && (
+                  <div className="mt-4 flex items-center text-sm text-neutral-600 dark:text-neutral-400">
+                    <span>Moving to next question...</span>
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </div>
+                )}
               </div>
-              <button
-                onClick={resetExercise}
-                className="btn-secondary flex items-center space-x-2"
-              >
-                <RotateCcw className="w-4 h-4" />
-                <span>Retry</span>
-              </button>
-              <button
-                onClick={backToHub}
-                className="btn-primary"
-              >
-                Continue Learning
-              </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     );
