@@ -118,7 +118,7 @@ const Header: React.FC = () => {
                     (location.pathname === '/' && item.sectionId) || location.pathname === item.href
                       ? 'nav-item-active'
                       : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-                  } ${item.name === 'Practice' ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 font-medium px-4 py-2 rounded-lg shadow-sm' : ''}`}
+                  }`}
                 >
                   {item.name}
                 </button>
@@ -177,7 +177,7 @@ const Header: React.FC = () => {
                     (location.pathname === '/' && item.sectionId) || location.pathname === item.href
                       ? 'nav-item-active'
                       : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-                  } ${item.name === 'Practice' ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 font-medium rounded-lg' : ''}`}
+                  }`}
                 >
                   {item.name}
                 </button>
