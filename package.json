@@ -1,8 +1,27 @@
 {
-  "name": "rofi-statisticlab",
-  "private": true,
+  "name": "@rofiperlungoding/statisticlabrofi",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "private": false,
   "version": "1.0.0",
+  "description": "Advanced statistical modeling and data visualization environment with PapaParse ingestion and Recharts visualization.",
   "type": "module",
+  "author": "rofiperlungoding <opikopi32@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rofiperlungoding/statisticlabrofi.git"
+  },
+  "keywords": [
+    "statistics",
+    "data-viz",
+    "recharts",
+    "papaparse",
+    "analysis",
+    "react",
+    "enterprise"
+  ],
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
